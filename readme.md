@@ -10,8 +10,10 @@ Take a notice that for yandex DNS record names `@.domain.com` and `domain.com` a
 
 ```bash
 # export all zones from GCP to dns folder
+mkdir ./dns
 gcloud dns managed-zones list | awk '{print $1}' | grep -v NAME | xargs -n 1 -I% gcloud dns record-sets export ./dns/% --zone=%
 
+mkdir ./tf
 # generate terraform files
 go run main.go --dns-dir=./dns --tf-dir=./tf --skip-types=ns,soa
 
