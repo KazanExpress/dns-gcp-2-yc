@@ -1,4 +1,4 @@
-module github.com/alikhil/dns-gcp-2-yc
+module github.com/KazanExpress/dns-gcp-2-yc
 
 go 1.18
 
