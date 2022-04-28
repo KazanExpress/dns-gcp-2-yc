@@ -102,7 +102,7 @@ func main() {
 
 	dnsDir := flag.String("dns-dir", "./dns", "Directory with zone files")
 	tfDir := flag.String("tf-dir", "./tf", "Directory to put terraform files")
-	skipTypes := flag.String("skip-types", "ns,soa", "Comma separated list of record types to skip")
+	skipTypes := flag.String("skip-types", "ns,soa", "Comma separated list of record types to skip for root domain")
 
 	flag.Parse()
 
@@ -142,13 +142,15 @@ func main() {
 			return
 		}
 
+		domain := zone.Domain()
+
 		rootBody := hclFile.Body()
 
 		rootBody.AppendBlock(zone.ToTerraformBlock(zoneName))
 
 		rootBody.AppendNewline()
 		for _, record := range zone {
-			if typesMap[strings.ToLower(record.Type)] {
+			if typesMap[strings.ToLower(record.Type)] && record.Name == domain {
 				continue
 			}
 			rootBody.AppendBlock(record.ToTerraformBlock(zoneName))
